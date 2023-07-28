@@ -5,14 +5,15 @@ ENV NODE_ENV=production
 
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
+COPY ["package.json","pnpm-lock.yaml", "./"]
+
 RUN npm install -g pnpm
 
 RUN pnpm install --production
 
 COPY . .
 
-RUN pnpm run build
+RUN pnpm build
 
 # Étape 2 : Image prod
 FROM node:20
@@ -23,9 +24,6 @@ WORKDIR /app
 
 COPY package.json pnpm-lock.yaml ./
 
-RUN npm install -g pnpm
-
-RUN pnpm install --production
 
 COPY --from=builder /app/dist ./dist
 
